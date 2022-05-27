@@ -64,6 +64,9 @@ const nullValue = null; // null 할당
 typeof undefined; // 'undefined'
 typeof null; // 'object'
 
-// 자바스크립트에서는 null 과 undefined를 같이 거르기 위해 아래처럼 사용한다.
-undefinedValue == null; // true
-nullValue == null; // true
+//  isNaN 은 자체적으로 오류가 많은 타입 검사이다. (느슨한 검사)
+//  is Not a Number => 숫자가 아니다
+//  숫자인경우?
+console.log(!isNaN(123)); // true
+console.log(isNaN(123 + "텍스트")); // true 느슨한 검사
+console.log(Number.isNaN(123 + "텍스트")); // false 엄격한 검사
