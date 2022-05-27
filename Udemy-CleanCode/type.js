@@ -54,3 +54,16 @@ Object.prototype.toString.call(new String("")); // [object 해당타입]
 //  js는 동적 타입 언어이다.
 //  js에서는 다양한 타입 검사 방법이 존재한다.(타입 검사또한 오류가 많기에 조심해야 된다.)
 //  원하는 타입이 있을경우 Stackoverflow에서 잘 검색해서 사용하자??
+
+//  undefined 와 null 의 차이
+//  undefined : 개발자가 값이 없다는 것을 의도하지 않았을때 타입
+//  null : 개발자가 의도한 값이 없다는 타입
+
+let undefinedValue; // 할당을 하지 않으면 ? undefined
+const nullValue = null; // null 할당
+typeof undefined; // 'undefined'
+typeof null; // 'object'
+
+// 자바스크립트에서는 null 과 undefined를 같이 거르기 위해 아래처럼 사용한다.
+undefinedValue == null; // true
+nullValue == null; // true
