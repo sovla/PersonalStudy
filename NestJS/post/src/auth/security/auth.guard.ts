@@ -1,7 +1,7 @@
 import { AuthGuard as NestAuthGuard } from '@nestjs/passport';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { User } from '../entity/user.entity';
+import { User } from 'src/domain/user.entity';
 
 @Injectable()
 export class AuthGuard extends NestAuthGuard('jwt') {
