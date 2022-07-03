@@ -1,4 +1,5 @@
-import { UserRepository } from './user.repository';
+import { UserAuthorityRepository } from './repository/user-autority.repository';
+import { UserRepository } from './repository/user.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserService } from './user.service';
 import { AuthService } from './auth.service';
@@ -10,7 +11,7 @@ import { JwtStrategy } from './security/passport.jwt.strategy';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserRepository]),
+    TypeOrmModule.forFeature([UserRepository, UserAuthorityRepository]),
     JwtModule.register({
       secret: 'SECRET',
       signOptions: {

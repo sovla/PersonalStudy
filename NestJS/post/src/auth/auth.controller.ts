@@ -10,7 +10,9 @@ import {
 } from '@nestjs/common';
 import { UserDTO } from './dto/user.dto';
 import { Request, Response } from 'express';
-import { AuthGuard } from './security/auth.guard';
+import { AuthGuard, RolesGuard } from './security/auth.guard';
+import { Roles } from './decorator/role.decorator';
+import { RoleType } from './role-type';
 
 @Controller('api')
 export class AuthController {
@@ -31,6 +33,14 @@ export class AuthController {
   @Get('/authenticate')
   @UseGuards(AuthGuard)
   isAuthenticated(@Req() req: Request): any {
+    const user: any = req.user;
+    return user;
+  }
+
+  @Get('/admin-role')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(RoleType.ADMIN)
+  adminRole(@Req() req: Request): any {
     const user: any = req.user;
     return user;
   }
