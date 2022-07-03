@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { Post } from './domain/post.entity';
 import { PostModule } from './post/post.module';
 import { AuthModule } from './auth/auth.module';
+import { UserAuthority } from './auth/entity/user-authority.entity';
 
 @Module({
   imports: [
@@ -16,8 +17,9 @@ import { AuthModule } from './auth/auth.module';
       username: 'root',
       password: 'root',
       database: 'post',
-      entities: [Post, User], // entity 추가후 넣어주기
+      entities: [Post, User, UserAuthority], // entity 추가후 넣어주기
       synchronize: true, // 운영시 사용 금지
+      logging: true,
     }),
     PostModule,
     AuthModule,

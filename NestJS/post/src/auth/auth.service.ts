@@ -41,35 +41,62 @@ export class AuthService {
   //   return userFind;
   // }
 
-  async validateUser(userDTO: UserDTO): Promise<
-    | {
-        accessToken: string;
-      }
-    | undefined
-  > {
+  async validateUser(
+    userDTO: UserDTO,
+  ): Promise<{ accessToken: string } | undefined> {
     const userFind: User = await this.userService.findByFields({
       where: { username: userDTO.username },
     });
+    if (!userFind) {
+      throw new UnauthorizedException();
+    }
     const validatePassword = await bcrypt.compare(
       userDTO.password,
       userFind.password,
     );
-    if (!userFind || !validatePassword) {
+    if (!validatePassword) {
       throw new UnauthorizedException();
     }
+
+    this.convertInAuthorities(userFind);
+
     const payload: Payload = {
       id: userFind.id,
       username: userFind.username,
+      authorities: userFind.authorities,
     };
-
     return {
       accessToken: this.jwtService.sign(payload),
     };
   }
 
-  async tokenValidateUser(payload: Payload): Promise<UserDTO | undefined> {
-    return await this.userService.findByFields({
+  async tokenValidateUser(payload: Payload): Promise<User | undefined> {
+    const userFind = await this.userService.findByFields({
       where: { id: payload.id },
     });
+    this.flatAuthorities(userFind);
+    return userFind;
+  }
+
+  private flatAuthorities(user: any): User {
+    if (user && user.authorities) {
+      const authorities: string[] = [];
+      user.authorities.forEach((authority) =>
+        authorities.push(authority.authorityName),
+      );
+      user.authorities = authorities;
+    }
+    return user;
+  }
+
+  private convertInAuthorities(user: any): User {
+    if (user && user.authorities) {
+      const authorities: any[] = [];
+      user.authorities.forEach((authority) =>
+        authorities.push({ name: authority.authorityName }),
+      );
+      user.authorities = authorities;
+    }
+    return user;
   }
 }
