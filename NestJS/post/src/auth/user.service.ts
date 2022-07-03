@@ -5,7 +5,7 @@ import { UserDTO } from './dto/user.dto';
 import { UserRepository } from './repository/user.repository';
 import * as bcrypt from 'bcrypt';
 import { runInThisContext } from 'vm';
-import { User } from './entity/user.entity';
+import { User } from 'src/domain/user.entity';
 
 @Injectable()
 export class UserService {

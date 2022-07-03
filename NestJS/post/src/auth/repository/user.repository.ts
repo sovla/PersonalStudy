@@ -1,4 +1,4 @@
-import { User } from 'src/auth/entity/user.entity';
+import { User } from 'src/domain/user.entity';
 import { EntityRepository, Repository } from 'typeorm';
 
 @EntityRepository(User)
