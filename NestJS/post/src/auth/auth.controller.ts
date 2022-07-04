@@ -30,10 +30,20 @@ export class AuthController {
   async login(@Body() userDTO: UserDTO, @Res() res: Response): Promise<any> {
     const jwt = await this.authService.validateUser(userDTO);
     res.setHeader('Authorization', 'Bearer ' + jwt.accessToken);
+
     res.cookie('jwt', jwt.accessToken, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 1days
+      domain: 'localhost',
+      path: '/',
     });
+    res.cookie('jwt1', jwt.accessToken, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000, // 1days
+      domain: '.localhost.com',
+      path: '/',
+    });
+
     return res.send({
       message: 'success',
     });
@@ -41,6 +51,9 @@ export class AuthController {
 
   @Post('/logout')
   logout(@Req() req: Request, @Res() res: Response): any {
+    res.header({
+      'Access-Control-Allow-Credentials': true,
+    });
     res.cookie('jwt', '', {
       maxAge: 0,
     });
