@@ -14,6 +14,7 @@ import styles from "../styles/Home.module.css";
 import axios from "axios";
 import { Cookies } from "next/dist/server/web/spec-extension/cookies";
 import { setConfig } from "next/config";
+import Router from "next/router";
 axios.defaults.withCredentials = true;
 const axios1 = axios.create({
     withCredentials: true,
@@ -43,6 +44,7 @@ const Login: NextPage = () => {
                 .then((res) => {
                     console.log(res);
                     if (res.status === 201) {
+                        // Router.push("/post");
                     }
                 });
         },

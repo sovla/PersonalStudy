@@ -1,4 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn, Timestamp } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  Timestamp,
+} from 'typeorm';
+import { User } from './user.entity';
 
 @Entity()
 export class Post {
@@ -16,4 +24,12 @@ export class Post {
 
   @Column('timestamp')
   date: Timestamp;
+
+  @ManyToOne((type) => User, (user) => user.post)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
+
+  @ManyToOne((type) => User, (user) => user.username)
+  @JoinColumn({ name: 'user_name' })
+  username: User;
 }
