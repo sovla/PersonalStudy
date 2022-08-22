@@ -3,12 +3,13 @@ import axios from "axios";
 import Products from "./Products";
 import ErrorBanner from "../../components/ErrorBanner";
 import Options from "./Options";
+import { OrderContext } from "../../contexts/OrderContext";
 
 const Type = ({ orderType }) => {
     const [items, setItems] = useState([]);
 
     const [error, setError] = useState(false);
-    // const [orderDatas,updateItemCount] = useContext(OrderConte)
+    const [orderDatas, updateItemCount] = useContext(OrderContext);
 
     useEffect(() => {
         loadItems(orderType);
@@ -35,10 +36,28 @@ const Type = ({ orderType }) => {
             key={item.name}
             name={item.name}
             imagePath={item.imagePath}
+            updateItemCount={(itemName, newItemCount) =>
+                updateItemCount(itemName, newItemCount, orderType)
+            }
         />
     ));
 
-    return <div>{optionItems}</div>;
+    return (
+        <>
+            <h2>주문 종류</h2>
+            <p>상품 하나의 가격</p>
+            <p>상품 총 가격: {orderDatas.totals[orderType]}</p>
+
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: orderType === "options" && "column",
+                }}
+            >
+                {optionItems}
+            </div>
+        </>
+    );
 };
 
 export default Type;
