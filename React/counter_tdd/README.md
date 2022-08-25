@@ -1,70 +1,29 @@
-# Getting Started with Create React App
+# 간단한 카운터 테스트
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 테스팅을 하는 이유
 
-## Available Scripts
+1. 디버깅 시간 단축
+2. 안정적인 어플리케이션 (결함,장애,에러 예방)
+3. 재설계 시간의 단축
 
-In the project directory, you can run:
+## React Testing Library 란?
 
-### `npm start`
+Behavior Driven Test(행위 주도 테스트) 방법론이 대두 되면서 함께 주목 받기 시작한 테스팅 라이브러리입니다.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+RTL의 경우 React 구성 요소 작업을 위한 API를 추가하여 DOM Testing Library 위에 구축됩니다.
+DOM Testing Library란 Dom 노드를 테스트하기 위한 매우 가벼운 솔루션 입니다.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 구현 주도(Enzyme) vs 행위 주도(RTL)
 
-### `npm test`
+```html
+<h2 class="title">제목</h2>
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Implementation Driven Test(구현 주도 테스트)의 경우 h2태그에서 h3태그로 변경시 테스트가 깨집니다. 그에 반해, Behavior Driven Test(행위 주도 테스트)의 경우 동일한 제목으로 보이기에 테스트가 깨지지 않습니다.
 
-### `npm run build`
+### DOM이란
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+D: Document
+O: Object
+M: Model
+DOM(문서 객체 모델)은 XML, HTML 문서의 각 항목을 계층으로 표현하여 생성, 변형 삭제할 수 있도록 돕는 인터페이스이다.
