@@ -29,6 +29,23 @@ class Grade extends StatelessWidget {
           backgroundColor: Colors.amber[700],
           centerTitle: true, // 센터
           elevation: 0.0, // 그림자
+          leading: IconButton(
+              onPressed: () {
+                print("menu button is clicked");
+              },
+              icon: Icon(Icons.menu)),
+          actions: <Widget>[
+            IconButton(
+                onPressed: () {
+                  print("menu button is clicked");
+                },
+                icon: Icon(Icons.shopping_cart)),
+            IconButton(
+                onPressed: () {
+                  print("menu button is clicked");
+                },
+                icon: Icon(Icons.search)),
+          ],
         ),
         body: Padding(
           padding: EdgeInsets.fromLTRB(30.0, 40.0, 0.0, 0.0),
@@ -38,7 +55,7 @@ class Grade extends StatelessWidget {
               Center(
                 child: CircleAvatar(
                   // 동그란 아바타
-                  backgroundImage: AssetImage("assets/fire.jfif "), // 백그라운드 이미지
+                  backgroundImage: AssetImage("assets/fire.gif"), // 백그라운드 이미지
                   radius: 60.0, // 크기
                 ),
               ),
