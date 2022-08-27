@@ -32,10 +32,12 @@ dependencies:
 
 
   # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
+  # Use with the CupertinoIcons class for iOS style icons. 
+  # like_button  - 좋아요 버튼 22-08-27 추가
   cupertino_icons: ^1.0.2
   fluttertoast: ^8.0.9
   introduction_screen: ^3.0.1
+  like_button: ^2.0.4
 
 dev_dependencies:
   flutter_test:
