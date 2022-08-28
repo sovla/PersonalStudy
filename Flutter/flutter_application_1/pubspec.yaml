@@ -38,6 +38,8 @@ dependencies:
   fluttertoast: ^8.0.9
   introduction_screen: ^3.0.1
   like_button: ^2.0.4
+  geolocator: ^9.0.1
+  http: ^0.13.5
 
 dev_dependencies:
   flutter_test:
