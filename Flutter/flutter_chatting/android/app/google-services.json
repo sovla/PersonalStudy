@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1019174591714",
+    "project_id": "gavri-3a344",
+    "storage_bucket": "gavri-3a344.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1019174591714:android:2ad51fc58803aeaac3d2bb",
+        "android_client_info": {
+          "package_name": "com.example.flutter_chatting"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1019174591714-sk0ag8abovttuhvid92d9ob0k26m47ss.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZpyuDoUBm41XDmsmenPIZg4pMaUlGV64"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1019174591714-sk0ag8abovttuhvid92d9ob0k26m47ss.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
