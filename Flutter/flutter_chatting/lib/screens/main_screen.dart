@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chatting/config/palette.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_chatting/screens/chat_screen.dart';
 
 class LoginSignupScreen extends StatefulWidget {
   const LoginSignupScreen({Key? key}) : super(key: key);
@@ -9,6 +11,8 @@ class LoginSignupScreen extends StatefulWidget {
 }
 
 class _LoginSignupScreenState extends State<LoginSignupScreen> {
+  final _authentication = FirebaseAuth.instance;
+
   bool isSignupScreen = true;
   final _formKey = GlobalKey<FormState>();
   String userName = "";
@@ -17,6 +21,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
 
   void _tryValidation() {
     final isValid = _formKey.currentState!.validate();
+
     if (isValid) {
       _formKey.currentState!.save();
     }
@@ -50,7 +55,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                           RichText(
                               text: TextSpan(
                                   text: "Welcome",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       letterSpacing: 1.0,
                                       fontSize: 25,
                                       color: Colors.white),
@@ -59,7 +64,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                     text: isSignupScreen
                                         ? " to Yummy Chat!"
                                         : " back",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         letterSpacing: 1.0,
                                         fontSize: 25,
                                         color: Colors.white,
@@ -74,11 +79,11 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                   ),
                 )),
             AnimatedPositioned(
-                duration: Duration(milliseconds: 500),
+                duration: const Duration(milliseconds: 500),
                 curve: Curves.easeIn,
                 top: 180.0,
                 child: AnimatedContainer(
-                  duration: Duration(milliseconds: 500),
+                  duration: const Duration(milliseconds: 500),
                   curve: Curves.easeIn,
                   padding: const EdgeInsets.all(20.0),
                   height: isSignupScreen ? 280.0 : 250.0,
@@ -94,7 +99,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                             spreadRadius: 5)
                       ]),
                   child: SingleChildScrollView(
-                    padding: EdgeInsets.only(bottom: 20),
+                    padding: const EdgeInsets.only(bottom: 20),
                     child: Column(
                       children: [
                         Row(
@@ -160,7 +165,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                 child: Column(
                                   children: [
                                     TextFormField(
-                                      key: ValueKey(1),
+                                      key: const ValueKey(1),
                                       validator: (value) {
                                         if (value!.isEmpty ||
                                             value.length < 4) {
@@ -169,6 +174,9 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                       },
                                       onSaved: (value) {
                                         userName = value!;
+                                      },
+                                      onChanged: (value) {
+                                        userName = value;
                                       },
                                       decoration: const InputDecoration(
                                           prefixIcon: Icon(Icons.account_circle,
@@ -195,7 +203,8 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                       height: 8,
                                     ),
                                     TextFormField(
-                                      key: ValueKey(2),
+                                      keyboardType: TextInputType.emailAddress,
+                                      key: const ValueKey(2),
                                       validator: (value) {
                                         if (value!.isEmpty ||
                                             !value.contains("@")) {
@@ -204,6 +213,9 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                       },
                                       onSaved: (value) {
                                         userEmail = value!;
+                                      },
+                                      onChanged: (value) {
+                                        userEmail = value;
                                       },
                                       decoration: const InputDecoration(
                                           prefixIcon: Icon(Icons.email,
@@ -230,7 +242,8 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                       height: 8,
                                     ),
                                     TextFormField(
-                                      key: ValueKey(3),
+                                      obscureText: true,
+                                      key: const ValueKey(3),
                                       validator: (value) {
                                         if (value!.isEmpty ||
                                             value.length < 6) {
@@ -239,6 +252,9 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                       },
                                       onSaved: (value) {
                                         userPassword = value!;
+                                      },
+                                      onChanged: (value) {
+                                        userPassword = value;
                                       },
                                       decoration: const InputDecoration(
                                           prefixIcon: Icon(Icons.lock,
@@ -266,21 +282,24 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                           ),
                         if (!isSignupScreen)
                           Container(
-                            margin: EdgeInsets.only(top: 20),
+                            margin: const EdgeInsets.only(top: 20),
                             child: Form(
                                 key: _formKey,
                                 child: Column(
                                   children: [
                                     TextFormField(
-                                      key: ValueKey(4),
+                                      key: const ValueKey(4),
                                       validator: (value) {
                                         if (value!.isEmpty ||
-                                            value.length < 4) {
+                                            !value.contains("@")) {
                                           return "4글자 이상 입력해주세요.";
                                         }
                                       },
                                       onSaved: (value) {
-                                        userName = value!;
+                                        userEmail = value!;
+                                      },
+                                      onChanged: (value) {
+                                        userEmail = value;
                                       },
                                       decoration: const InputDecoration(
                                           prefixIcon: Icon(Icons.account_circle,
@@ -307,7 +326,8 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                       height: 8,
                                     ),
                                     TextFormField(
-                                      key: ValueKey(5),
+                                      obscureText: true,
+                                      key: const ValueKey(5),
                                       validator: (value) {
                                         if (value!.isEmpty ||
                                             value.length < 6) {
@@ -316,6 +336,9 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                       },
                                       onSaved: (value) {
                                         userPassword = value!;
+                                      },
+                                      onChanged: (value) {
+                                        userPassword = value;
                                       },
                                       decoration: const InputDecoration(
                                           prefixIcon: Icon(Icons.lock,
@@ -346,7 +369,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                   ),
                 )),
             AnimatedPositioned(
-                duration: Duration(milliseconds: 500),
+                duration: const Duration(milliseconds: 500),
                 curve: Curves.easeIn,
                 top: isSignupScreen ? 410 : 380,
                 left: 0,
@@ -360,8 +383,52 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(50)),
                       child: GestureDetector(
-                        onTap: () {
-                          _tryValidation();
+                        onTap: () async {
+                          print(userName);
+                          print(userEmail);
+                          print(userPassword);
+                          if (isSignupScreen) {
+                            _tryValidation();
+                            try {
+                              final newUser = await _authentication
+                                  .createUserWithEmailAndPassword(
+                                      email: userEmail, password: userPassword);
+
+                              if (newUser.user != null) {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return const ChatScreen();
+                                }));
+                              }
+                            } catch (e) {
+                              print(e);
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text("이메일 비밀번호 확인해주세요"),
+                                backgroundColor: Colors.blue,
+                              ));
+                            }
+                          } else {
+                            _tryValidation();
+                            try {
+                              final newUser = await _authentication
+                                  .signInWithEmailAndPassword(
+                                      email: userEmail, password: userPassword);
+                              if (newUser.user != null) {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return const ChatScreen();
+                                }));
+                              }
+                            } catch (e) {
+                              print(e);
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text("이메일 비밀번호 확인해주세요"),
+                                backgroundColor: Colors.blue,
+                              ));
+                            }
+                          }
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -391,7 +458,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
               child: Column(
                 children: [
                   Text(isSignupScreen ? "or Signup with" : "or Signin with"),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   TextButton.icon(
@@ -399,11 +466,11 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                     style: TextButton.styleFrom(
                         backgroundColor: Palette.googleColor,
                         primary: Colors.white,
-                        minimumSize: Size(155, 40),
+                        minimumSize: const Size(155, 40),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20))),
-                    icon: Icon(Icons.add),
-                    label: Text("Google"),
+                    icon: const Icon(Icons.add),
+                    label: const Text("Google"),
                   )
                 ],
               ),
