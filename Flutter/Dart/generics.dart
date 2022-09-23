@@ -5,6 +5,7 @@
 void main(List<String> args) {
   var names = <String>[];
   names.add("Gavri");
+
   // names.add(1); // int type error
 }
 
@@ -30,6 +31,7 @@ var pages = <String, String>{
   "index.html": "HomePage",
   "robots.txt": "Hints for web robots",
 };
+
 // 생성자와 함께 매개변수화된 유형 사용
 var nameSet = Set<String>.from(names);
 // var views = Map<int, View>();
@@ -57,4 +59,4 @@ var someBaseClassFoo = Foo<SomeBaseClass>();
 var extenderFoo = Foo<Extender>(); // 하위 클래스
 
 var foo = Foo();
-print(foo); // Instance of 'Foo<SomeBaseClass>'
+// print(foo); // Instance of 'Foo<SomeBaseClass>'
