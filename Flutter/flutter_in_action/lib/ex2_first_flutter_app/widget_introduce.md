@@ -135,6 +135,7 @@ abstract class StatefulWidget extends Widget {
 
 -   위젯이 빌드될 때 동기적으로 읽을 수 있습니다.
 -   위젯 수명 주기에서 변경할 수 있습니다.
+-   아이디 변경
 
 ## 위젯 트리에서 상태 객체 가져오기
 
