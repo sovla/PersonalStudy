@@ -134,8 +134,20 @@ abstract class StatefulWidget extends Widget {
    StatefulWidget 클래스는 State 클래스에 해당하고 State는 해당 StatefulWidget이 유지해야 하는 상태를 나타내며 State에 저장된 상태 정보는 다음과 같을 수 있습니다.
 
 -   위젯이 빌드될 때 동기적으로 읽을 수 있습니다.
--   위젯 수명 주기에서 변경할 수 있습니다.
--   아이디 변경
+-   위젯 수명 주기에서 변경할 수 있습니다. 상태가 변경되면 해당 setState()메서드를 수동으로 호출하여 Flutter 프레임워크에 상태가 변경 되었음을 알릴 수 있습니다.프레임 워크는 메시지를 수신한 후 build 메서드를 다시 호출하여 리 빌드합니다.
+
+2. 상태 수명 주기
+
+<img src="https://book.flutterchina.club/assets/img/2-5.a59bef97.jpg" />
+
+-   initState : 위젯이 위젯 트리에 처음 삽입될 때 호출됩니다.
+-   didChangeDependencies : State 객체의 종속성이 변경될 때 호출됩니다. 일반적인 시나리오는 시스템 언어 로케일 또는 앱 테마가 변경될때 Flutter 프레임워크가 위젯에 이 콜백을 호출하도록 알리는 것입니다. 이 함수는 생성후 처음으로 위젯이 마운트 될 때도 호출된다는 점에 유의ㅏ해야 합니다.
+-   build : 위젯 하위 트리를 빌드하는데 사용되며 다음 시나리오에서 호출됩니다.
+    -   initState -> didUpdateWidget -> setState -> didChangeDependencies -> build
+-   reassemble - 개발 및 디버깅을 위해 특별히 제공되며 핫 리로드 중에 호출 됩니다.
+-   didUpdateWidget - 위젯이 다시 빌드 되면 Flutter 프레임워크는 widget.canUpdate를 통해 이전 노드와 새 노드를 감지해 업데이트가 필요한지 결정하고 업데이트시 이 함수를 호출합니다.
+-   deactivate - state 객체가 트리에서 제거될 때 호출됩니다. 일부 시나리오에서 Flutter 프레임워크는 이 STate 개체를 포함하는 하위 트리가 트리의 한 위치에서 다른 위치로 이동할 때 와 같이 STate 개체를 트리에 다시 삽입합니다.
+-   dispose - State 객체가 영구적으로 제거될 떄 호출되며 일반적으로 이 콜백에서 리소스가 해제됩니다.
 
 ## 위젯 트리에서 상태 객체 가져오기
 
