@@ -11,4 +11,11 @@ thisAmount -> result 리턴해주는 값은 result로 명확하게 이름 변경
 
 명언 타임 - 컴퓨터가 이해하는 코드는 바보도 작성할 수 있다. 사람이 이해하도록 작성하는 프로그래머가 진정한 실력자다 -켄트백
 
-# play 변수 제거하기 
+# play 변수 제거하기 인라인 변수 제거하기 
+기존 코드를 보면 plays는 statement 매개변수로 받아 perf의 playID에 따라  값을 변환 해주었는데 이 과정에서 perf(개별공연) 값에 따라 play 값을 리턴해주기에 함수로 따로 추출해서 복잡도를 낮춰 보자 
+
+
+1. const play = plays[aPerformance.playID]; 
+2. const play = playFor(aPerformance);
+3. play 지우고 playFor(aPerformance) 로 변경
+
