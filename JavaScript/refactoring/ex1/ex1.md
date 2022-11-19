@@ -23,3 +23,29 @@ thisAmount -> result 리턴해주는 값은 result로 명확하게 이름 변경
 format을 통해 달러로 값을 바꿔 주는 기능을 추출하고 
 이름 또한 format이 아닌 usd로 변환 
 기존 가격에서 / 100 해주던 공통 기능을 한곳으로 모으는 리팩토링 진행 
+
+# volumnCredits 함수화 
+과정 
+- 반복문 쪼개기
+    ```
+    for (let perf of invoice.performances) {
+        volumeCredits += volumnCreditsFor(perf);
+    }
+    ```
+- 함수 추출하기
+    ```
+    function totalVolumnCredits() {
+    let result = 0;
+    for (let perf of invoice.performances) {
+        result += volumnCreditsFor(perf);
+    }
+    return result;
+    }
+    ```
+- 인라인 변수 제거
+    ```
+    result += `적립 포인트 : ${volumeCredits}점\n`;
+    ---- 변경 ----
+    result += `적립 포인트 : ${totalVolumnCredits()}점\n`;
+    ```
+
