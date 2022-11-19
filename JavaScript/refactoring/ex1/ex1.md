@@ -49,3 +49,23 @@ format을 통해 달러로 값을 바꿔 주는 기능을 추출하고
     result += `적립 포인트 : ${totalVolumnCredits()}점\n`;
     ```
 
+# 계산 단계와 포맷팅 단계 분리하기
+이전까지 한 리팩토링은 프로그램의 논리적 요소를 파악하기 쉽도록 코드의 구조를 보강하는 데 주안점을 두고 리팩토링했습니다.
+```
+function statementRefactoringSwitch(invoice) {
+  let result = `청구 내역 (고객명: ${invoice.customer})\n`;
+
+  for (let perf of invoice.performances) {
+    result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${
+      perf.audience
+    }석)\n`;
+  }
+
+  result += `총액: ${usd(totalAmount())}\n`;
+  result += `적립 포인트 : ${totalVolumnCredits()}점\n`;
+  return result;
+}
+```
+현재는 7줄짜리 HTML 작성 코드만 보이는 상황입니다. 많이 나아졌지만 여기서 문제는 분리된 계산 함수들이 텍스트 버전인 statement() 안에 중첩 함수로 들어 있는 것입니다. 이것을 해결 하기 위해 단계 쪼개기를 통해 나눌 것입니다.
+
+함수 쪼개기 -> 계산 단위분리 두 과정을 거친뒤 함수는 재사용 가능한 함수로 변했다!
