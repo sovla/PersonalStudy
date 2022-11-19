@@ -24,7 +24,7 @@ format을 통해 달러로 값을 바꿔 주는 기능을 추출하고
 이름 또한 format이 아닌 usd로 변환 
 기존 가격에서 / 100 해주던 공통 기능을 한곳으로 모으는 리팩토링 진행 
 
-# volumnCredits 함수화 
+# volumnCredits,totalAmount 함수화 
 과정 
 - 반복문 쪼개기
     ```
