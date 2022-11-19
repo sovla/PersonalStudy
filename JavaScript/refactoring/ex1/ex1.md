@@ -19,3 +19,7 @@ thisAmount -> result 리턴해주는 값은 result로 명확하게 이름 변경
 2. const play = playFor(aPerformance);
 3. play 지우고 playFor(aPerformance) 로 변경
 
+# format 함수 추출 및 이름 변경, 공통 기능 추출
+format을 통해 달러로 값을 바꿔 주는 기능을 추출하고 
+이름 또한 format이 아닌 usd로 변환 
+기존 가격에서 / 100 해주던 공통 기능을 한곳으로 모으는 리팩토링 진행 
