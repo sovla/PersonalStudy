@@ -51,7 +51,7 @@ function statement(invoice, plays) {
   return result;
 }
 
-function statementRefactoring(invoice, plays) {
+function statementRefactoringSwitch(invoice, plays) {
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = `청구 내역 (고객명: ${invoice.customer})\n`;
@@ -82,6 +82,7 @@ function statementRefactoring(invoice, plays) {
   return result;
 }
 
-// console.log(statement(invoices, plays));
-
-module.exports = statement;
+module.exports = {
+  statement: statement,
+  statementRefactoringSwitch: statementRefactoringSwitch,
+};
