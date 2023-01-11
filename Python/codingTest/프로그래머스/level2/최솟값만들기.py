@@ -20,3 +20,7 @@ def solution(A:list,B:list):
     
 
     return answer
+
+# 다른 사람 소스 
+def getMinSum(A,B):
+    return sum(a*b for a, b in zip(sorted(A), sorted(B, reverse = True)))
