@@ -9,3 +9,14 @@
 # 즉, 이 경우가 최소가 되므로 29를 return 합니다.
 
 # 배열 A, B가 주어질 때 최종적으로 누적된 최솟값을 return 하는 solution 함수를 완성해 주세요.
+
+def solution(A:list,B:list):
+    answer = 0
+
+    A.sort()
+    B.sort()
+    for i in range(len(A)):
+        answer += (A[i]*B[i])
+    
+
+    return answer
