@@ -1,7 +1,7 @@
 /*
 - [v] 테스트 코드 작성
 - [v] 함수 추출하기 진행
-- [ ] 주요 로직 분리
+- [v] 주요 로직 분리
 주요 로직 분리 겸 HtmlRender 함수로 추출
 1. 주요 로직 분리 전 데이터 분리
 2. html Render 작성
@@ -49,7 +49,7 @@ function createStatement(invoice) {
   }
 
   function enrichPerformance(aPerformance) {
-    const calculator = new PerformanceCalculator(aPerformance, playFor(aPerformance));
+    const calculator = createPerformanceCalculator(aPerformance, playFor(aPerformance));
     const result = Object.assign({}, aPerformance);
     result.play = calculator.play;
     result.amount = calculator.amount;
@@ -69,6 +69,17 @@ function createStatement(invoice) {
       (total, aPerformance) => total + aPerformance.volumeCredits,
       0
     );
+  }
+}
+
+function createPerformanceCalculator(aPerformance, play) {
+  switch (play.type) {
+    case "tragedy":
+      return new TragedyCalculator(aPerformance, play);
+    case "comedy":
+      return new ComedyCalculator(aPerformance, play);
+    default:
+      throw new Error(`알 수 없는 장르 : ${play.type}`);
   }
 }
 
@@ -101,37 +112,46 @@ class PerformanceCalculator {
   }
 
   get amount() {
-    let resultAmount = 0;
-    switch (this.play.type) {
-      case "tragedy":
-        resultAmount = 40000;
-        if (this.performance.audience > 30) {
-          resultAmount += 1000 * (this.performance.audience - 30);
-        }
-        break;
-
-      case "comedy":
-        resultAmount = 30000;
-        if (this.performance.audience > 20) {
-          resultAmount += 10000 + 500 * (this.performance.audience - 20);
-        }
-        resultAmount += 300 * this.performance.audience;
-
-        break;
-
-      default:
-        throw new Error(`알 수 없는 장르 : ${play.type}`);
-    }
-    return resultAmount;
+    throw new Error("서브클래스에서 처리하도록 설계되었습니다.");
   }
 
   get volumeCredits() {
-    let result = 0;
+    return Math.max(this.performance.audience - 30, 0);
+  }
+}
 
-    result += Math.max(this.performance.audience - 30, 0);
-
-    if ("comedy" === this.play.type) result += Math.floor(this.performance.audience / 5);
+class TragedyCalculator extends PerformanceCalculator {
+  constructor(aPerformance, aPlay) {
+    super(aPerformance, aPlay);
+  }
+  get amount() {
+    let result = 40000;
+    if (this.performance.audience > 30) {
+      result += 1000 * (this.performance.audience - 30);
+    }
     return result;
+  }
+  get volumeCredits() {
+    return super.volumeCredits;
+  }
+}
+
+class ComedyCalculator extends PerformanceCalculator {
+  constructor(aPerformance, aPlay) {
+    super(aPerformance, aPlay);
+  }
+  get amount() {
+    let result = 30000;
+    if (this.performance.audience > 20) {
+      result += 10000 + 500 * (this.performance.audience - 20);
+    }
+    result += 300 * this.performance.audience;
+
+    return result;
+  }
+
+  get volumeCredits() {
+    return super.volumeCredits + Math.floor(this.performance.audience / 5);
   }
 }
 
