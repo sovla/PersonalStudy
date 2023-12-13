@@ -8,6 +8,7 @@
 1. amountFor 함수로 추출 및 변수 네이밍 정리
 2. playFor 함수로 play변수 제거
 3. local 변수 제거 thisAmount -> amountFor(perf)
+4. 반복문 쪼개기 (volumeCreditsFor)
 
 */
 
@@ -15,33 +16,47 @@ const { assert } = require("console");
 const invoices = require("../json/invoice.json");
 const plays = require("../json/plays.json");
 
-function statement(invoice, plays) {
+function statement(invoice) {
   let totalAmount = 0;
-  let volumeCredits = 0;
   let result = `청구 내역 (고객명: ${invoice.customer})\n`;
 
-  const format = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-  }).format;
-
   for (let aPerformance of invoice.performances) {
-    volumeCredits += Math.max(aPerformance.audience - 30, 0);
-
-    if ("comedy" === playFor(aPerformance).type)
-      volumeCredits += Math.floor(aPerformance.audience / 5);
-
-    result += ` ${playFor(aPerformance).name}: ${format(amountFor(aPerformance) / 100)} (${
+    result += ` ${playFor(aPerformance).name}: ${usd(amountFor(aPerformance))} (${
       aPerformance.audience
     }석)\n`;
     totalAmount += amountFor(aPerformance);
   }
 
-  result += `총액: ${format(totalAmount / 100)}\n`;
-  result += `적립 포인트 : ${volumeCredits}점\n`;
+  result += `총액: ${usd(totalAmount)}\n`;
+  result += `적립 포인트 : ${totalVolumeCredits(invoice)}점\n`;
   return result;
 }
+function totalVolumeCredits(invoice) {
+  let volumeCredits = 0;
+
+  for (let aPerformance of invoice.performances) {
+    volumeCredits += volumeCreditsFor(aPerformance);
+  }
+  return volumeCredits;
+}
+
+function usd(aNumber) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+  }).format(aNumber / 100);
+}
+
+function volumeCreditsFor(aPerformance) {
+  let result = 0;
+
+  result += Math.max(aPerformance.audience - 30, 0);
+
+  if ("comedy" === playFor(aPerformance).type) result += Math.floor(aPerformance.audience / 5);
+  return result;
+}
+
 function playFor(perf) {
   return plays[perf.playID];
 }
@@ -74,8 +89,9 @@ function amountFor(aPerformance) {
 // Test Code
 function testRun() {
   const expected = `청구 내역 (고객명: BigCo)\n Hamlet: $650.00 (55석)\n As You Like It: $580.00 (35석)\n Othello: $500.00 (40석)\n총액: $1,730.00\n적립 포인트 : 47점\n`;
-
+  console.time("statement");
   const actual = statement(invoices, plays);
+  console.timeEnd("statement");
 
   assert(actual === expected, "테스트 실패");
 }
