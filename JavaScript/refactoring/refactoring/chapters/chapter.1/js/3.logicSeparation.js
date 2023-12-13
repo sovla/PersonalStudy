@@ -69,20 +69,17 @@ function statement(invoice) {
   }
 
   function totalAmount(statementData) {
-    let result = 0;
-    for (let aPerformance of statementData.performances) {
-      result += aPerformance.amount;
-    }
-    return result;
+    return statementData.performances.reduce(
+      (total, aPerformance) => total + aPerformance.amount,
+      0
+    );
   }
 
   function totalVolumeCredits(statementData) {
-    let volumeCredits = 0;
-
-    for (let aPerformance of statementData.performances) {
-      volumeCredits += aPerformance.volumeCredits;
-    }
-    return volumeCredits;
+    return statementData.performances.reduce(
+      (total, aPerformance) => total + aPerformance.volumeCredits,
+      0
+    );
   }
 }
 
