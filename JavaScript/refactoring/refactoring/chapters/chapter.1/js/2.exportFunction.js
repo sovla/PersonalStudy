@@ -4,6 +4,8 @@
 
 함수 추출할 코드는 switch문이다. 
 그 이유는 코드를 분석해서 얻은 정보인 `switch문이 계산하는 정보`라는 것은 휘발성이 강한 정보이기에, 빠르게 코드에 반영시켜야 한다.
+
+1. amountFor 함수로 추출 및 변수 네이밍 정리
 */
 
 const { assert } = require("console");
@@ -39,29 +41,29 @@ function statement(invoice, plays) {
   result += `적립 포인트 : ${volumeCredits}점\n`;
   return result;
 }
-function amountFor(play, perf) {
-  let thisAmount = 0;
+function amountFor(play, aPerformance) {
+  let resultAmount = 0;
   switch (play.type) {
     case "tragedy":
-      thisAmount = 40000;
-      if (perf.audience > 30) {
-        thisAmount += 1000 * (perf.audience - 30);
+      resultAmount = 40000;
+      if (aPerformance.audience > 30) {
+        resultAmount += 1000 * (aPerformance.audience - 30);
       }
       break;
 
     case "comedy":
-      thisAmount = 30000;
-      if (perf.audience > 20) {
-        thisAmount += 10000 + 500 * (perf.audience - 20);
+      resultAmount = 30000;
+      if (aPerformance.audience > 20) {
+        resultAmount += 10000 + 500 * (aPerformance.audience - 20);
       }
-      thisAmount += 300 * perf.audience;
+      resultAmount += 300 * aPerformance.audience;
 
       break;
 
     default:
       throw new Error(`알 수 없는 장르 : ${play.type}`);
   }
-  return thisAmount;
+  return resultAmount;
 }
 
 // Test Code
