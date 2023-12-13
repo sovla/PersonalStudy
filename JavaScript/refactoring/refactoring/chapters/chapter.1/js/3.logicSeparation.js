@@ -14,13 +14,35 @@ const invoices = require("../json/invoice.json");
 const plays = require("../json/plays.json");
 
 function statement(invoice) {
-  const statementData = {};
-  statementData.customer = invoice.customer;
-  statementData.performances = invoice.performances.map(enrichPerformance);
-  statementData.totalAmount = totalAmount(statementData);
-  statementData.totalVolumeCredits = totalVolumeCredits(statementData);
+  return renderPlainText(createStatement(invoice));
+}
 
-  return renderPlainText(statementData, invoice);
+function htmlStatement(invoice) {
+  return renderHtml(createStatement(invoice));
+}
+
+function renderHtml(data) {
+  let result = `<h1>청구 내역 (고객명: ${data.customer})</h1>\n`;
+  result += "<table>\n";
+  result += "<tr><th>연극</th><th>좌석수</th><th>금액</th></tr>";
+  for (let aPerformance of data.performances) {
+    result += ` <tr><td>${aPerformance.play.name}</td><td>(${aPerformance.audience}석)</td>`;
+    result += `<td>${usd(aPerformance.amount)}</td></tr>\n`;
+  }
+  result += "</table>\n";
+  result += `<p>총액: <em>${usd(data.totalAmount)}</em></p>\n`;
+  result += `<p>적립 포인트 : <em>${data.totalVolumeCredits}</em>점</p>\n`;
+  return result;
+}
+
+function createStatement(invoice) {
+  const result = {};
+  result.customer = invoice.customer;
+  result.performances = invoice.performances.map(enrichPerformance);
+  result.totalAmount = totalAmount(result);
+  result.totalVolumeCredits = totalVolumeCredits(result);
+
+  return result;
 
   function playFor(perf) {
     return plays[perf.playID];
@@ -113,6 +135,30 @@ function testRun() {
   console.timeEnd("statement");
 
   assert(actual === expected, `테스트 실패---\nresult: ${actual}\nexpected: ${expected}`);
+
+  // htmlStatement Test
+  const htmlExpected = `<h1>청구 내역 (고객명: BigCo)</h1>
+<table>
+<tr><th>연극</th><th>좌석수</th><th>금액</th></tr> <tr><td>Hamlet</td><td>(55석)</td><td>$650.00</td></tr>
+ <tr><td>As You Like It</td><td>(35석)</td><td>$580.00</td></tr>
+ <tr><td>Othello</td><td>(40석)</td><td>$500.00</td></tr>
+</table>
+<p>총액: <em>$1,730.00</em></p>
+<p>적립 포인트 : <em>47</em>점</p>
+`;
+  console.time("htmlStatement");
+  const htmlActual = htmlStatement(invoices, plays);
+  console.timeEnd("htmlStatement");
+
+  assert(
+    htmlActual === htmlExpected,
+    `테스트 실패---\nresult: ${htmlActual}\nexpected: ${htmlExpected}`
+  );
+
+  // speed Test
+  console.time("statement");
+  [...Array(10000)].forEach(() => statement(invoices, plays));
+  console.timeEnd("statement");
 }
 
 if (require.main == module) {
