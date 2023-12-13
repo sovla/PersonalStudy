@@ -6,6 +6,9 @@
 그 이유는 코드를 분석해서 얻은 정보인 `switch문이 계산하는 정보`라는 것은 휘발성이 강한 정보이기에, 빠르게 코드에 반영시켜야 한다.
 
 1. amountFor 함수로 추출 및 변수 네이밍 정리
+2. playFor 함수로 play변수 제거
+3. local 변수 제거 thisAmount -> amountFor(perf)
+
 */
 
 const { assert } = require("console");
@@ -23,27 +26,29 @@ function statement(invoice, plays) {
     minimumFractionDigits: 2,
   }).format;
 
-  for (let perf of invoice.performances) {
-    const play = plays[perf.playID];
+  for (let aPerformance of invoice.performances) {
+    volumeCredits += Math.max(aPerformance.audience - 30, 0);
 
-    let thisAmount = 0;
-    thisAmount = amountFor(play, perf);
+    if ("comedy" === playFor(aPerformance).type)
+      volumeCredits += Math.floor(aPerformance.audience / 5);
 
-    volumeCredits += Math.max(perf.audience - 30, 0);
-
-    if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
-
-    result += ` ${play.name}: ${format(thisAmount / 100)} (${perf.audience}석)\n`;
-    totalAmount += thisAmount;
+    result += ` ${playFor(aPerformance).name}: ${format(amountFor(aPerformance) / 100)} (${
+      aPerformance.audience
+    }석)\n`;
+    totalAmount += amountFor(aPerformance);
   }
 
   result += `총액: ${format(totalAmount / 100)}\n`;
   result += `적립 포인트 : ${volumeCredits}점\n`;
   return result;
 }
-function amountFor(play, aPerformance) {
+function playFor(perf) {
+  return plays[perf.playID];
+}
+
+function amountFor(aPerformance) {
   let resultAmount = 0;
-  switch (play.type) {
+  switch (playFor(aPerformance).type) {
     case "tragedy":
       resultAmount = 40000;
       if (aPerformance.audience > 30) {
