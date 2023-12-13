@@ -4,8 +4,8 @@
 - [ ] 주요 로직 분리
 주요 로직 분리 겸 HtmlRender 함수로 추출
 1. 주요 로직 분리 전 데이터 분리
-
-
+2. html Render 작성
+3. calculator 작성
 
 */
 
@@ -49,44 +49,11 @@ function createStatement(invoice) {
   }
 
   function enrichPerformance(aPerformance) {
+    const calculator = new PerformanceCalculator(aPerformance, playFor(aPerformance));
     const result = Object.assign({}, aPerformance);
-    result.play = playFor(result);
-    result.amount = amountFor(result);
-    result.volumeCredits = volumeCreditsFor(result);
-    return result;
-  }
-
-  function amountFor(aPerformance) {
-    let resultAmount = 0;
-    switch (aPerformance.play.type) {
-      case "tragedy":
-        resultAmount = 40000;
-        if (aPerformance.audience > 30) {
-          resultAmount += 1000 * (aPerformance.audience - 30);
-        }
-        break;
-
-      case "comedy":
-        resultAmount = 30000;
-        if (aPerformance.audience > 20) {
-          resultAmount += 10000 + 500 * (aPerformance.audience - 20);
-        }
-        resultAmount += 300 * aPerformance.audience;
-
-        break;
-
-      default:
-        throw new Error(`알 수 없는 장르 : ${play.type}`);
-    }
-    return resultAmount;
-  }
-
-  function volumeCreditsFor(aPerformance) {
-    let result = 0;
-
-    result += Math.max(aPerformance.audience - 30, 0);
-
-    if ("comedy" === aPerformance.play.type) result += Math.floor(aPerformance.audience / 5);
+    result.play = calculator.play;
+    result.amount = calculator.amount;
+    result.volumeCredits = calculator.volumeCredits;
     return result;
   }
 
@@ -125,6 +92,47 @@ function usd(aNumber) {
     currency: "USD",
     minimumFractionDigits: 2,
   }).format(aNumber / 100);
+}
+
+class PerformanceCalculator {
+  constructor(aPerformance, aPlay) {
+    this.performance = aPerformance;
+    this.play = aPlay;
+  }
+
+  get amount() {
+    let resultAmount = 0;
+    switch (this.play.type) {
+      case "tragedy":
+        resultAmount = 40000;
+        if (this.performance.audience > 30) {
+          resultAmount += 1000 * (this.performance.audience - 30);
+        }
+        break;
+
+      case "comedy":
+        resultAmount = 30000;
+        if (this.performance.audience > 20) {
+          resultAmount += 10000 + 500 * (this.performance.audience - 20);
+        }
+        resultAmount += 300 * this.performance.audience;
+
+        break;
+
+      default:
+        throw new Error(`알 수 없는 장르 : ${play.type}`);
+    }
+    return resultAmount;
+  }
+
+  get volumeCredits() {
+    let result = 0;
+
+    result += Math.max(this.performance.audience - 30, 0);
+
+    if ("comedy" === this.play.type) result += Math.floor(this.performance.audience / 5);
+    return result;
+  }
 }
 
 // Test Code
