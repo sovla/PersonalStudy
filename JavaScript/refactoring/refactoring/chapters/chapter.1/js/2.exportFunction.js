@@ -9,6 +9,7 @@
 2. playFor 함수로 play변수 제거
 3. local 변수 제거 thisAmount -> amountFor(perf)
 4. 반복문 쪼개기 (volumeCreditsFor)
+5. 반복문 쪼개기 (totalAmount)
 
 */
 
@@ -17,20 +18,27 @@ const invoices = require("../json/invoice.json");
 const plays = require("../json/plays.json");
 
 function statement(invoice) {
-  let totalAmount = 0;
   let result = `청구 내역 (고객명: ${invoice.customer})\n`;
 
   for (let aPerformance of invoice.performances) {
     result += ` ${playFor(aPerformance).name}: ${usd(amountFor(aPerformance))} (${
       aPerformance.audience
     }석)\n`;
-    totalAmount += amountFor(aPerformance);
   }
 
-  result += `총액: ${usd(totalAmount)}\n`;
+  result += `총액: ${usd(totalAmount(invoice))}\n`;
   result += `적립 포인트 : ${totalVolumeCredits(invoice)}점\n`;
   return result;
 }
+
+function totalAmount(invoice) {
+  let result = 0;
+  for (let aPerformance of invoice.performances) {
+    result += amountFor(aPerformance);
+  }
+  return result;
+}
+
 function totalVolumeCredits(invoice) {
   let volumeCredits = 0;
 
