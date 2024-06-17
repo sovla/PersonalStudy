@@ -62,3 +62,40 @@ func test(){
 	println(sum, product) // 5, 6
 }
 
+
+
+// 익명함수
+
+func anonymousFunction() {
+	sum := func(n ...int) int {
+		s := 0
+		for _, i:= range n {
+			s += i
+		}
+		return s
+	}
+	result := sum(1,2,3,4,5)
+	println(result) // 15
+}
+
+// 일급 함수
+func firstClassFunction() {
+	// 함수를 변수에 대입
+	add := func(a,b int) int {
+		return a+b
+	}
+	
+	// 함수를 매개변수로 전달
+	result := operate(add, 10, 20)
+	println(result) // 30
+}
+
+func operate(f func(int,int) int, a,b int) int {
+	return f(a,b)
+}
+
+// 타입문을 사용한 함수 정의
+type calculator func(int,int) int
+func calc(f calculator,a int , b int) int {
+	return f(a,b)
+}
