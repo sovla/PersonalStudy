@@ -4,20 +4,36 @@
 export LC_ALL=C.UTF-8
 export LANG=C.UTF-8
 
-echo "🔍 Step 1: Check modified files"
+# 디버깅 모드 활성화 여부 체크
+DEBUG=false
+for arg in "$@"; do
+  if [[ "$arg" == "-d" || "$arg" == "--debug" ]]; then
+    DEBUG=true
+    break
+  fi
+done
+
+# 디버깅 메시지 출력 함수
+log_debug() {
+  if [ "$DEBUG" = true ]; then
+    echo -e "🔍 $1"
+  fi
+}
+
+log_debug "Step 1: Check modified files"
 git status --porcelain
 
-echo -e "\n🔍 Step 2: Extract file paths (removing status prefixes)"
+log_debug "\nStep 2: Extract file paths (removing status prefixes)"
 filtered_files=$(git status --porcelain | sed -E 's/^.{3}//' | tr -d '"' | iconv -f euc-kr -t utf-8)
-echo "$filtered_files"
+log_debug "$filtered_files"
 
-echo -e "\n🔍 Step 3: Extract top-level folders (problem numbers)"
+log_debug "\nStep 3: Extract top-level folders (problem numbers)"
 problem_folders=$(echo "$filtered_files" | awk -F'/' '{print $2}' | tr -d '"' | iconv -f euc-kr -t utf-8)
-echo "$problem_folders"
+log_debug "$problem_folders"
 
-echo -e "\n🔍 Step 4: Filter only numeric problem numbers"
+log_debug "\nStep 4: Filter only numeric problem numbers"
 problem_number=$(echo "$problem_folders" | grep -oE '^[0-9]+' | sort -u | head -n 1)
-echo "$problem_number"
+log_debug "$problem_number"
 
 # 문제 번호를 찾지 못한 경우 오류 처리
 if [ -z "$problem_number" ]; then
@@ -25,7 +41,7 @@ if [ -z "$problem_number" ]; then
   exit 1
 fi
 
-echo -e "\n✅ Successfully detected problem number: $problem_number"
+log_debug "\n✅ Successfully detected problem number: $problem_number"
 
 # Git add and commit
 git add .
