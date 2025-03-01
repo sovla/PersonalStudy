@@ -1,19 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                      :::    :::    :::     */
+/*   Problem Number: 11478                             :+:    :+:      :+:    */
+/*                                                    +:+    +:+        +:+   */
+/*   By: sovla <boj.kr/u/sovla>                      +#+    +#+          +#+  */
+/*                                                  +#+      +#+        +#+   */
+/*   https://boj.kr/11478                          #+#        #+#      #+#    */
+/*   Solved: 2025/03/01 14:19:53 by sovla         ###          ###   ##.kr    */
+/*                                                                            */
+/* ************************************************************************** */
+
 const fs = require("fs");
 const input = fs.readFileSync("/dev/stdin").toString().trim();
-const MOD = 1000000007; // 해시 값 충돌 방지를 위한 큰 소수
-const BASE = 31; // 일반적인 롤링 해시에서 사용되는 소수
 
-const length = input.length;
 const set = new Set();
+const length = input.length;
 
 for (let i = 0; i < length; i++) {
-  let hash = 0;
-  let power = 1; // BASE^j 값 계산을 위한 변수
-
-  for (let j = i; j < length; j++) {
-    hash = (hash * BASE + (input.charCodeAt(j) - 96)) % MOD;
-    set.add(hash);
-    power = (power * BASE) % MOD; // 다음 루프를 위한 BASE 증가
+  for (let j = i + 1; j <= length; j++) {
+    set.add(input.slice(i, j)); // slice()를 사용하여 서브스트링 생성
   }
 }
 
