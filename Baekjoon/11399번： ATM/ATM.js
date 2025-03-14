@@ -18,13 +18,12 @@ const [info, wait] = fs
 
 let total = 0;
 let waitCount = 0;
-wait
-  .split(" ")
-  .map((v) => +v)
-  .sort()
-  .forEach((v) => {
-    waitCount += v;
-    total += waitCount;
-  });
+
+const numbers = wait.split(" ").map(Number);
+const sortedNumbers = numbers.sort((a, b) => a - b);
+for (const element of sortedNumbers) {
+  waitCount += element;
+  total += waitCount;
+}
 
 console.log(total);
