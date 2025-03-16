@@ -12,12 +12,12 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Index() // name 컬럼에 인덱스 추가
   @Column()
+  @Index()
   name: string;
 
-  @Index() // name 컬럼에 인덱스 추가
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  @Index()
   createdAt: Date;
 
   @OneToMany(() => Address, (address) => address.user)
