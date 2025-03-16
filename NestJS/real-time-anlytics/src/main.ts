@@ -15,6 +15,7 @@ async function bootstrap() {
       stopAtFirstError: true, // 첫 번째 오류 발견 시 검증 중단
     }),
   );
+
   await app.listen(3000);
 }
 bootstrap();
