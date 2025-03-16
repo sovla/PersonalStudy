@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { AddressModule } from './address/address.module';
 import { LoggerMiddleware } from 'src/middleware/logger.middleware';
+import { CacheModule } from '@nestjs/cache-manager';
+import { createKeyv } from '@keyv/redis';
 
 @Module({
   imports: [
@@ -24,6 +26,14 @@ import { LoggerMiddleware } from 'src/middleware/logger.middleware';
     }),
     UserModule,
     AddressModule,
+    CacheModule.registerAsync({
+      isGlobal: true,
+      useFactory: () => {
+        return {
+          stores: [createKeyv('redis://localhost:6379')],
+        };
+      },
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

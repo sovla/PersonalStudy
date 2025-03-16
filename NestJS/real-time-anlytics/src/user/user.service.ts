@@ -1,5 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Cache } from 'cache-manager';
 import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
 
@@ -8,7 +10,13 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
+
+  private readonly CACHE_TTL = 1000 * 60 * 60; // 1 hour
+
+  // CacheManager
 
   async onModuleInit() {
     const count = await this.count();
@@ -42,19 +50,35 @@ export class UserService {
 
   async createUser(name: string): Promise<User> {
     const user = this.usersRepository.create({ name });
+
+    const cacheKey = `user:${user.id}`;
+    this.cacheManager.set(cacheKey, user, this.CACHE_TTL);
+
     return this.usersRepository.save(user);
   }
 
   async getAllUsers(): Promise<User[]> {
+    const cacheKey = 'users:all';
+    const cachedUsers = await this.cacheManager.get<User[]>(cacheKey);
+    if (cachedUsers) {
+      console.log('Cache hit');
+      return cachedUsers;
+    }
     const maxLimit = 10000;
-    // index apply 55ms
-    // without index apply 250ms
-    return this.usersRepository.find({
+    const users = await this.usersRepository.find({
       take: maxLimit,
       order: {
         createdAt: 'DESC',
       },
     });
+    console.log('Cache miss');
+    if (users) {
+      this.cacheManager.set(cacheKey, users, this.CACHE_TTL);
+    }
+
+    // index apply 55ms
+    // without index apply 250ms
+    return users;
   }
 
   async getUserByName(name: string) {
@@ -68,11 +92,21 @@ export class UserService {
   }
 
   async getUserById(id: number) {
+    const cacheKey = `user:${id}`;
+    const cachedUser = await this.cacheManager.get<User>(cacheKey);
+    if (cachedUser) {
+      console.log('Cache hit');
+      return cachedUser;
+    }
     const result = await this.usersRepository.findOne({
       where: {
         id,
       },
     });
+    console.log('Cache miss');
+    if (result) {
+      this.cacheManager.set(cacheKey, result, this.CACHE_TTL);
+    }
     return result;
   }
 }
