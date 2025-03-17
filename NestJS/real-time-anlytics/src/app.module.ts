@@ -7,6 +7,9 @@ import { AddressModule } from './address/address.module';
 import { LoggerMiddleware } from 'src/middleware/logger.middleware';
 import { CacheModule } from '@nestjs/cache-manager';
 import { createKeyv } from '@keyv/redis';
+import { BullModule } from '@nestjs/bullmq';
+import { BullBoardModule } from '@bull-board/nestjs';
+import { ExpressAdapter } from '@bull-board/express';
 
 @Module({
   imports: [
@@ -33,6 +36,17 @@ import { createKeyv } from '@keyv/redis';
           stores: [createKeyv('redis://localhost:6379')],
         };
       },
+    }),
+    BullModule.forRoot({
+      prefix: 'mq/v1',
+      connection: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
+    BullBoardModule.forRoot({
+      route: '/queues',
+      adapter: ExpressAdapter, // Or FastifyAdapter from `@bull-board/fastify`
     }),
   ],
   controllers: [AppController],

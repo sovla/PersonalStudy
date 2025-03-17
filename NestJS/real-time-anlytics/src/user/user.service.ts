@@ -4,6 +4,8 @@ import { CacheService } from 'src/common/cache.service';
 import { LogAllMethods } from 'src/common/decorator/log-all-mehtods.decorator';
 import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
+import { Queue } from 'bullmq';
+import { UserMQKey, UserQueue } from 'src/queue/user.queue';
 
 @Injectable()
 @LogAllMethods()
@@ -12,6 +14,9 @@ export class UserService implements OnModuleInit {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private cacheService: CacheService,
+
+    @UserQueue()
+    private userQueue: Queue,
   ) {}
 
   private readonly CACHE_TTL = 1000 * 60 * 60; // 1 hour
@@ -54,13 +59,36 @@ export class UserService implements OnModuleInit {
     }
   }
 
+  async createUserJob(name: string): Promise<string> {
+    const job = await this.userQueue.add(
+      UserMQKey.USER_CREATED,
+      {
+        name: name,
+      },
+      {
+        lifo: true, // 회원가입의 경우 대기열의 가장 앞에 추가
+        priority: 1,
+        attempts: 3,
+        backoff: {
+          type: 'exponential',
+          delay: 3000,
+        },
+        removeOnComplete: true,
+        removeOnFail: false,
+      },
+    );
+
+    return job.id;
+  }
+
   async createUser(name: string): Promise<User> {
     const user = this.usersRepository.create({ name });
-    const savedUser = await this.usersRepository.save(user);
+    await this.usersRepository.save(user);
 
-    const cacheKey = this.cacheService.getUserKey(savedUser.id);
-    await this.cacheService.set(cacheKey, savedUser, this.CACHE_TTL);
-    return savedUser;
+    const cacheKey = this.cacheService.getUserKey(user.id);
+    await this.cacheService.set(cacheKey, user, this.CACHE_TTL);
+
+    return user;
   }
 
   async getAllUsers(): Promise<User[]> {

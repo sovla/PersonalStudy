@@ -6,7 +6,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
   @Post()
   async createUser(@Body('name') name: string) {
-    return this.userService.createUser(name);
+    return this.userService.createUserJob(name);
   }
 
   @Get()
