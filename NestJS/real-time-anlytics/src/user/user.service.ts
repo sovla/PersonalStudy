@@ -61,17 +61,15 @@ export class UserService {
     const cacheKey = 'users:all';
     const cachedUsers = await this.cacheManager.get<User[]>(cacheKey);
     if (cachedUsers) {
-      console.log('Cache hit');
       return cachedUsers;
     }
-    const maxLimit = 10000;
+    const maxLimit = 100;
     const users = await this.usersRepository.find({
       take: maxLimit,
       order: {
         createdAt: 'DESC',
       },
     });
-    console.log('Cache miss');
     if (users) {
       this.cacheManager.set(cacheKey, users, this.CACHE_TTL);
     }
@@ -95,7 +93,6 @@ export class UserService {
     const cacheKey = `user:${id}`;
     const cachedUser = await this.cacheManager.get<User>(cacheKey);
     if (cachedUser) {
-      console.log('Cache hit');
       return cachedUser;
     }
     const result = await this.usersRepository.findOne({
@@ -103,7 +100,6 @@ export class UserService {
         id,
       },
     });
-    console.log('Cache miss');
     if (result) {
       this.cacheManager.set(cacheKey, result, this.CACHE_TTL);
     }
