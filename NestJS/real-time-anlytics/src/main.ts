@@ -20,5 +20,15 @@ async function bootstrap() {
   );
 
   await app.listen(3000);
+  const gracefulShutdown = async () => {
+    logger.log('Starting graceful shutdown...');
+    await app.close(); // NestJS 앱 종료
+
+    logger.log('Shutdown completed!');
+    process.exit(0);
+  };
+
+  process.on('SIGTERM', gracefulShutdown);
+  process.on('SIGINT', gracefulShutdown);
 }
 bootstrap();

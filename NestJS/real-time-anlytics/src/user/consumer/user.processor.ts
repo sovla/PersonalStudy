@@ -51,6 +51,24 @@ export class UserProcessor
 
   @OnWorkerEvent('ready')
   onWaiting(jobId) {
-    this.logger.debug(`🕒 작업이 큐에 추가됨: ${jobId}`);
+    this.logger.log('info', `🕒 작업이 큐에 추가됨: ${jobId}`);
+  }
+
+  async onModuleDestroy() {
+    this.logger.log(
+      'info',
+      '🛑 UserProcessor - onModuleDestroy: Worker 종료 중...',
+    );
+    await this.worker.close(); // Worker를 안전하게 종료
+    this.logger.log('info', '✅ Worker 종료 완료');
+  }
+
+  async onApplicationShutdown(signal?: string) {
+    this.logger.log(
+      'info',
+      `🛑 UserProcessor - onApplicationShutdown: ${signal} 신호 감지, Worker 종료 중...`,
+    );
+    await this.worker.close(); // Worker를 안전하게 종료
+    this.logger.log('info', '✅ Worker 종료 완료');
   }
 }
