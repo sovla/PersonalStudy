@@ -1,3 +1,5 @@
+import { logger } from 'src/common/winston.config';
+
 /**
  * @description 모든 메서드의 실행 시간을 로그로 남기는 데코레이터
  */
@@ -36,16 +38,18 @@ export function LogAllMethods() {
           return result.then((res: any) => {
             const diff = process.hrtime(start);
             const timeInMs = diff[0] * 1000 + diff[1] / 1e6;
-            console.log(
-              `${className} : ${propertyName} executed in ${timeInMs.toFixed(3)} ms`,
+            logger.debug(
+              `${propertyName} executed in ${timeInMs.toFixed(3)} ms`,
+              className,
             );
             return res;
           });
         } else {
           const diff = process.hrtime(start);
           const timeInMs = diff[0] * 1000 + diff[1] / 1e6;
-          console.log(
-            `${className} : ${propertyName} executed in ${timeInMs.toFixed(3)} ms`,
+          logger.debug(
+            `${propertyName} executed in ${timeInMs.toFixed(3)} ms`,
+            className,
           );
           return result;
         }

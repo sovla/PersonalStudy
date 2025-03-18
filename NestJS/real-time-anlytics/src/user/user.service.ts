@@ -6,6 +6,8 @@ import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
 import { Queue } from 'bullmq';
 import { UserMQKey, UserQueue } from 'src/queue/user.queue';
+import { WinstonLogger } from 'nest-winston';
+import InjectWintonLogger from 'src/common/decorator/inject-winston-logger';
 
 @Injectable()
 @LogAllMethods()
@@ -17,6 +19,8 @@ export class UserService implements OnModuleInit {
 
     @UserQueue()
     private userQueue: Queue,
+    @InjectWintonLogger()
+    private readonly logger: WinstonLogger,
   ) {}
 
   private readonly CACHE_TTL = 1000 * 60 * 60; // 1 hour
@@ -55,7 +59,7 @@ export class UserService implements OnModuleInit {
       );
 
       insertedRecords += batchSize;
-      console.log(`Inserted ${insertedRecords} records`);
+      this.logger.log('info', `Inserted ${insertedRecords} records`);
     }
   }
 
@@ -69,6 +73,7 @@ export class UserService implements OnModuleInit {
         lifo: true, // 회원가입의 경우 대기열의 가장 앞에 추가
         priority: 1,
         attempts: 3,
+
         backoff: {
           type: 'exponential',
           delay: 3000,

@@ -1,14 +1,18 @@
 import { OnWorkerEvent, WorkerHost } from '@nestjs/bullmq';
-import { Inject } from '@nestjs/common';
+import { OnModuleDestroy, OnApplicationShutdown } from '@nestjs/common';
 import { Job } from 'bullmq';
-import { WINSTON_MODULE_PROVIDER, WinstonLogger } from 'nest-winston';
+import { WinstonLogger } from 'nest-winston';
+import InjectWintonLogger from 'src/common/decorator/inject-winston-logger';
 import { UserQueueProcessor, UserMQKey } from 'src/queue/user.queue';
 import { UserService } from 'src/user/user.service';
 
 @UserQueueProcessor()
-export class UserProcessor extends WorkerHost {
+export class UserProcessor
+  extends WorkerHost
+  implements OnModuleDestroy, OnApplicationShutdown
+{
   constructor(
-    @Inject(WINSTON_MODULE_PROVIDER)
+    @InjectWintonLogger()
     private readonly logger: WinstonLogger,
 
     private readonly userService: UserService,
@@ -21,22 +25,23 @@ export class UserProcessor extends WorkerHost {
     }
     const isSuccess = Math.random() > 0.5;
     if (isSuccess) {
-      this.logger.debug('작업 성공');
+      this.logger.log('info', '작업 성공');
       return true;
     }
-    this.logger.debug('작업 실패');
+    this.logger.log('info', '작업 실패');
     throw new Error('작업 실패');
   }
 
   @OnWorkerEvent('active')
   onActive(job: Job) {
-    this.logger.debug(
+    this.logger.log(
+      'info',
       `Processing ${job.id} of type ${job.name} with data ${job.data}`,
     );
   }
   @OnWorkerEvent('completed')
   onCompleted(job, result) {
-    this.logger.debug(`✅ 작업 완료됨: ${job.id}, 결과: ${result}`);
+    this.logger.log('info', `✅ 작업 완료됨: ${job.id}, 결과: ${result}`);
   }
 
   @OnWorkerEvent('failed')
