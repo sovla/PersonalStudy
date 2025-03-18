@@ -10,6 +10,8 @@ import { createKeyv } from '@keyv/redis';
 import { BullModule } from '@nestjs/bullmq';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { ExpressAdapter } from '@bull-board/express';
+import { WinstonModule } from 'nest-winston';
+import WinstonConfig from 'src/common/winston.config';
 
 @Module({
   imports: [
@@ -48,6 +50,7 @@ import { ExpressAdapter } from '@bull-board/express';
       route: '/queues',
       adapter: ExpressAdapter, // Or FastifyAdapter from `@bull-board/fastify`
     }),
+    WinstonModule.forRoot(WinstonConfig),
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -25,7 +25,9 @@
     "migration:create": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create ./src/migrations/Migration",
     "migration:generate": "npm run typeorm migration:generate ./src/migrations/Migration",
     "migration:run": "npm run typeorm  migration:run",
-    "migration:revert": "npm run typeorm migration:revert"
+    "migration:revert": "npm run typeorm migration:revert",
+    "-------------------DOCKER-------------------": "",
+    "docker:elastic-search": "docker-compose -f docker/docker-compose.elastic-search.yml up -d"
   },
   "dependencies": {
     "@bull-board/api": "^6.7.10",
@@ -45,10 +47,13 @@
     "cache-manager": "^6.4.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "nest-winston": "^1.10.2",
     "pg": "^8.14.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
-    "typeorm": "^0.3.21"
+    "typeorm": "^0.3.21",
+    "winston": "^3.17.0",
+    "winston-elasticsearch": "^0.19.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.4.9",
